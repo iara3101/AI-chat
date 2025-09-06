@@ -34,3 +34,33 @@ Run unit tests with:
 ```bash
 pytest
 ```
+
+
+## Traubleshooting
+
+### Installing Ollama
+Steps to run Ollama with llama2 in a GitHub Codespace
+
+1. Install Ollama
+
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+2. Start the server (background)
+
+```bash
+ollama serve &
+```
+3. Download the model
+
+```bash
+ollama pull llama2
+```
+4. Verify
+
+```bash
+ollama run llama2 "Hello!"
+```
+5. Expose port 11434
+Forward it in your Codespace so your app can reach the server.
