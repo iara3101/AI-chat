@@ -24,8 +24,10 @@ class Chatbot:
         system = {
             "role": "system",
             "content": (
-                "You are a friendly AI that replies in English with correct "
-                f"grammar. Keep answers under {MAX_TWEET_LEN} characters."
+                "You are a chatbot that always responds in clear, correct English. "
+                f"Each response must be a complete idea, maximum {MAX_TWEET_LEN} characters. "
+                f"Never exceed {MAX_TWEET_LEN} characters. Never truncate mid-thought. "
+                f"If you cannot answer fully within {MAX_TWEET_LEN} characters, rephrase concisely."
             ),
         }
         context = self.history[-6:]  # last 3 interactions (user+assistant)
@@ -35,8 +37,35 @@ class Chatbot:
     def generate(self, user_input: str) -> str:
         """Generate a response and update history."""
         messages = self._build_messages(user_input)
-        response = ollama.chat(model=self.model, messages=messages)
-        text = response["message"]["content"].strip()
+
+        attempts = 0
+        while True:
+            response = ollama.chat(model=self.model, messages=messages)
+            text = response["message"]["content"].strip()
+            if len(text) <= MAX_TWEET_LEN:
+                break
+            attempts += 1
+            if attempts >= 3:
+                print(
+                    f"Warning: response exceeds {MAX_TWEET_LEN} characters; truncating."
+                )
+                text = truncate_tweet(text)
+                break
+            print(f"Response too long ({len(text)} chars); asking to rewrite.")
+            messages.extend(
+                [
+                    {"role": "assistant", "content": text},
+                    {
+                        "role": "user",
+                        "content": (
+                            "Your last answer was too long. "
+                            f"Rewrite it under {MAX_TWEET_LEN} characters."
+                            "Give ONLY the final answer, no preamble, no explanations."
+                        ),
+                    },
+                ]
+            )
+
         text = truncate_tweet(text)
         self.history.extend(
             [{"role": "user", "content": user_input}, {"role": "assistant", "content": text}]

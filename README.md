@@ -1,12 +1,13 @@
 # AI Chat with Ollama
 
 This project demonstrates a conversational chatbot powered by [Ollama](https://ollama.com/).
-Responses are tweet-sized (maximum 180 characters) and respect word boundaries.
+Responses are tweet-sized (maximum 180 characters). The bot keeps rewriting overly long answers until they fit, and if
+shortening fails after several tries it warns and truncates the reply at a word boundary.
 
 ## Features
 - Maintains context for the last three interactions
 - Ensures replies are in English with correct grammar
-- Truncates answers to 180 characters without cutting words
+- Iteratively rewrites any answer exceeding 180 characters and warns with a word-boundary truncated reply if shortening fails
 - Command line interface with visible conversation history
 
 ## Requirements
