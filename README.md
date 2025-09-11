@@ -21,13 +21,20 @@ pip install -r requirements.txt
 ```
 
 ## Usage
-Start the chat:
+1. Start the server (background)
+
+```bash
+ollama serve &
+```
+
+2. Start the chat:
 
 ```bash
 python main.py
 ```
-Type messages and the bot will answer in tweet format. Use `exit` to quit; the
-full conversation history will then be displayed.
+Type messages and the bot will answer in tweet format. 
+
+Use `exit` to quit; the full conversation history will then be displayed.
 
 ## Testing
 Run unit tests with:

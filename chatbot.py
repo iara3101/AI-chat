@@ -28,6 +28,7 @@ class Chatbot:
                 f"Each response must be a complete idea, maximum {MAX_TWEET_LEN} characters. "
                 f"Never exceed {MAX_TWEET_LEN} characters. Never truncate mid-thought. "
                 f"If you cannot answer fully within {MAX_TWEET_LEN} characters, rephrase concisely."
+                "Your responses must be consistent with previous context."
             ),
         }
         context = self.history[-6:]  # last 3 interactions (user+assistant)
@@ -56,10 +57,11 @@ class Chatbot:
                 [
                     {"role": "assistant", "content": text},
                     {
-                        "role": "user",
+                        "role": "system",
                         "content": (
-                            "Your last answer was too long. "
-                            f"Rewrite it under {MAX_TWEET_LEN} characters."
+                            # "Your last answer was too long. "
+                            f"Rewrite your last answer under {MAX_TWEET_LEN} characters."
+                            "Give the full idea in that limit."
                             "Give ONLY the final answer, no preamble, no explanations."
                         ),
                     },
